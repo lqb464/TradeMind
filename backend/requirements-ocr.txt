@@ -1,0 +1,5 @@
+# Optional scanned-report OCR stack. The core API remains functional without it.
+-r requirements.txt
+pymupdf>=1.25.0
+pillow>=11.0.0
+rapidocr-onnxruntime>=1.4.4

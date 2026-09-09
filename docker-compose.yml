@@ -1,0 +1,88 @@
+name: trademind
+
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  init: true
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  redis:
+    <<: *service-defaults
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --loglevel warning
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  backend:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATA_DIR: /data
+      TRADEMIND_DB_PATH: /data/trademind.db
+      AUTH_REQUIRED: ${AUTH_REQUIRED:-true}
+      ALLOW_PUBLIC_REGISTRATION: ${ALLOW_PUBLIC_REGISTRATION:-false}
+      TRADEMIND_JWT_SECRET: ${TRADEMIND_JWT_SECRET:-trademind-local-development-secret-change-before-production}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-admin@example.com}
+      BOOTSTRAP_ADMIN_TOKEN: ${BOOTSTRAP_ADMIN_TOKEN:-trademind-local-bootstrap-token-change-before-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      REDIS_URL: redis://redis:6379/0
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai-compatible}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4.1-mini}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
+      LLM_MAX_INPUT_CHARS: ${LLM_MAX_INPUT_CHARS:-60000}
+      LLM_MAX_OUTPUT_TOKENS: ${LLM_MAX_OUTPUT_TOKENS:-1200}
+      LLM_PRICING_JSON: ${LLM_PRICING_JSON:-}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-20}
+      PAPER_INITIAL_CASH: ${PAPER_INITIAL_CASH:-100000}
+      MAX_MARKET_SNAPSHOT_AGE_SECONDS: ${MAX_MARKET_SNAPSHOT_AGE_SECONDS:-259200}
+      MARKET_MAX_FUTURE_SKEW_SECONDS: ${MARKET_MAX_FUTURE_SKEW_SECONDS:-300}
+      MAX_PRICE_DEVIATION_PCT: ${MAX_PRICE_DEVIATION_PCT:-5}
+      MAX_AI_TOKENS_PER_USER_PER_DAY: ${MAX_AI_TOKENS_PER_USER_PER_DAY:-200000}
+      MAX_AI_CALLS_PER_USER_PER_DAY: ${MAX_AI_CALLS_PER_USER_PER_DAY:-100}
+      MAX_RAG_DOCUMENTS_PER_USER: ${MAX_RAG_DOCUMENTS_PER_USER:-50}
+      MAX_RAG_CHARACTERS_PER_USER: ${MAX_RAG_CHARACTERS_PER_USER:-10000000}
+    volumes:
+      - app_data:/data
+      - ./training/outputs:/app/training/outputs:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 8
+
+  frontend:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      API_ORIGIN: http://backend:8000
+      NODE_ENV: production
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  redis_data:
+  app_data:

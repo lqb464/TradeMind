@@ -1,0 +1,10 @@
+# Optional training/fine-tuning stack; production inference does not require all of it.
+-r requirements.txt
+joblib>=1.4.0
+matplotlib>=3.9.0
+jupyterlab>=4.3.0
+sentence-transformers>=3.3.0
+transformers>=4.47.0
+datasets>=3.2.0
+accelerate>=1.2.0
+torch>=2.4.0
