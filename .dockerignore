@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+data/raw/
+data/interim/
+data/processed/
+training/outputs/

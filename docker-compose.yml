@@ -1,0 +1,8 @@
+name: trademind-ml
+services:
+  app:
+    build: .
+    ports:
+      - "${STREAMLIT_PORT:-8501}:8501"
+    volumes:
+      - ./training/outputs:/app/training/outputs
