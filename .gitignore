@@ -1,0 +1,72 @@
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ─── Virtual Environments ────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env/
+
+# ─── Jupyter ─────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── Data ────────────────────────────────────────────────────────────────────
+# Keep data/ tracked; ignore large files if needed
+data/*.csv
+
+# ─── Outputs ─────────────────────────────────────────────────────────────────
+outputs/models/
+outputs/reports/
+!outputs/.gitkeep
+
+# ─── MLflow ──────────────────────────────────────────────────────────────────
+experiments/mlruns.db
+experiments/mlruns/
+mlruns/
+
+# ─── Testing ─────────────────────────────────────────────────────────────────
+.pytest_cache/
+.pytest_tmp*/
+.pytest-tmp*/
+.pytest_audit*/
+.eval_tmp/
+.coverage
+htmlcov/
+coverage.xml
+
+# ─── IDE ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ─── Misc ────────────────────────────────────────────────────────────────────
+*.log
+*.tmp
+.env
+
+# ─── Next.js ────────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+.pnpm-store/
+*.tsbuildinfo
+
+# ─── Runtime state ──────────────────────────────────────────────────────────
+data/*.db
+data/*.db-*
+data/rag/
+training/outputs/*.joblib
+training/outputs/forecasters/
+training/outputs/sentiment/
+training/outputs/retriever/

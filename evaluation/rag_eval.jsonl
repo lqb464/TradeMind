@@ -1,0 +1,4 @@
+{"question":"Biên lợi nhuận gộp quý này thay đổi thế nào so với cùng kỳ?","expected_terms":["biên lợi nhuận gộp","cùng kỳ"],"category":"financial_comparison"}
+{"question":"Dòng tiền từ hoạt động kinh doanh có đủ tài trợ đầu tư không?","expected_terms":["dòng tiền từ hoạt động kinh doanh","chi đầu tư"],"category":"cash_flow"}
+{"question":"Rủi ro nào được ban lãnh đạo nhấn mạnh?","expected_terms":["rủi ro","tỷ giá"],"category":"risk_disclosure"}
+{"question":"Núi lửa trên sao Hỏa có màu gì?","expected_terms":[],"expect_no_answer":true,"category":"negative_control"}
